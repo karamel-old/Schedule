@@ -1,0 +1,19 @@
+{
+    "name": "karamel/schedule",
+    "description": "Heelo",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Amir Kalantar",
+            "email": "amir.kalantar@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Karamel\\Schedule\\" : "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}
