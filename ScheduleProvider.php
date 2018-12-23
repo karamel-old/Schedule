@@ -6,9 +6,10 @@ class ScheduleProvider
 {
     public function boot()
     {
-        (new ScheduleBuilder())->work(new DeleteCache())
+        $startTime = time();
+        (new ScheduleBuilder($startTime))->work(new DeleteCache())
             ->everyFiveMinutes();
-        (new ScheduleBuilder())->work(new DeleteCache())
+        (new ScheduleBuilder($startTime))->work(new DeleteCache())
             ->everyDay();
     }
 }

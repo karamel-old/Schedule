@@ -2,21 +2,18 @@
 
 namespace Karamel\Schedule;
 
+use Cron\CronExpression;
 use Karamel\Schedule\Interfaces\IScheduleBuilder;
 
 class ScheduleBuilder
 {
     private $schedule_code;
     private $work;
+    private $runTime;
 
-    private function generateScheduleCode($work)
+    public function __construct($runTime)
     {
-        $this->schedule_code = md5(serialize($work));
-    }
-
-    private function getScheduleCode($type)
-    {
-        return $this->schedule_code . '-' . md5($type);
+        $this->runTime = $runTime;
     }
 
     public function work(IScheduleBuilder $work)
@@ -26,28 +23,27 @@ class ScheduleBuilder
         return $this;
     }
 
+    private function generateScheduleCode($work)
+    {
+        $this->schedule_code = md5(serialize($work));
+    }
+
     public function everyFiveMinutes()
     {
-        $file_path = __DIR__ . '/Schedules/' . $this->getScheduleCode('EVERY FIVE MINUTES');
-        if (!file_exists($file_path)) {
+        $cron = CronExpression::factory("*/5 * * * *");
+        if ((int)$cron->getNextRunDate(null, 0, true)->format('U') == $this->runTime) {
             $this->work->run();
-            file_put_contents($file_path, time());
-        }else{
-            $lastRun = (int) file_get_contents($file_path);
-            if($lastRun == 0){
-                //
-            }else{
-                if(time() - $lastRun > 5*60){
-                    $this->work->run();
-                    file_put_contents($file_path, time());
-                }
-            }
         }
     }
 
     public function everyDay()
     {
 
+    }
+
+    private function getScheduleCode($type)
+    {
+        return $this->schedule_code . '-' . md5($type);
     }
 
 }
